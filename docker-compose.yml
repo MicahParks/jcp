@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  jcp:
+    image: "micahparks/jcp"
+    container_name: "jcp"
+    environment:
+      CONFIG_JSON: '{"jwks":{"https://example.com/jwks.json":{}}}'
+    ports:
+      - "8080:8080"

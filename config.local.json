@@ -1,0 +1,6 @@
+{
+  "jwks": {
+    "http://localhost:8081/jwks.json": {}
+  },
+  "logFormat": "human"
+}

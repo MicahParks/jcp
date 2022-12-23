@@ -1,0 +1,101 @@
+openapi: 3.0.1
+info:
+  title: JCP
+  description: A JWK Set client proxy.
+  version: 0.0.1
+servers:
+  - url: /
+paths:
+  /v1/validate:
+    post:
+      summary: Validate a JWT.
+      description: Validate a JWT with the given arguments. Keys from any of the configured
+        remote JWK Set resources can be used to parse it.
+      operationId: validate
+      requestBody:
+        description: The JWT validation request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateRequest'
+        required: true
+      responses:
+        200:
+          description: The token has been processed. Make sure to check the response
+            body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateResponse'
+        default:
+          description: An error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: A copy of the HTTP response status code.
+        meta:
+          $ref: '#/components/schemas/RequestMetadata'
+        msg:
+          type: string
+          description: A human-readable error message.
+    RequestMetadata:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: A UUID that uniquely identifies the request.
+          format: uuid
+    ValidateArgs:
+      required:
+        - token
+      type: object
+      properties:
+        aud:
+          type: array
+          description: A set of JWT aud claim values to check for. If there are no
+            matching values, validation will fail.
+          items:
+            type: string
+        iss:
+          type: array
+          description: A set of JWT iss claim values to check for. If there are no
+            matching values, validation will fail.
+          items:
+            type: string
+        sub:
+          type: array
+          description: A set of JWT sub claim values to check for. If there are no
+            matching values, validation will fail.
+          items:
+            type: string
+        token:
+          type: string
+          description: The JWT to validate.
+    ValidateRequest:
+      required:
+        - args
+      type: object
+      properties:
+        args:
+          $ref: '#/components/schemas/ValidateArgs'
+    ValidateResponse:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/RequestMetadata'
+        results:
+          $ref: '#/components/schemas/ValidateResults'
+    ValidateResults:
+      type: object
+      properties:
+        success:
+          type: boolean
